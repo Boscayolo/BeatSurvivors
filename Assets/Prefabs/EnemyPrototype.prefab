@@ -95,9 +95,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1867193057775725624}
+  - component: {fileID: 3950524645128160737}
   - component: {fileID: 8008749815488058766}
   - component: {fileID: 3623483764441773268}
   - component: {fileID: 7873403993983812468}
+  - component: {fileID: 1371858407916532288}
   m_Layer: 8
   m_Name: EnemyPrototype
   m_TagString: Untagged
@@ -123,6 +125,22 @@ Transform:
   - {fileID: 2835908452391990821}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3950524645128160737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7727730413406614439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5788d9b2e8d428646a12da3865c6a0de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 1
+  health: 50
+  contactDamage: 50
+  destinationSetter: {fileID: 8008749815488058766}
 --- !u!114 &8008749815488058766
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -213,6 +231,27 @@ MonoBehaviour:
   anim: {fileID: 2835908452399503819}
   endOfPathEffect: {fileID: 0}
   naturalSpeed: 3
+--- !u!135 &1371858407916532288
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7727730413406614439}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7997587555660163755
 GameObject:
   m_ObjectHideFlags: 0
