@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Sirenix.OdinInspector;
 
-public class EntityManager : MonoBehaviour
+public class EntityManager : SerializedMonoBehaviour
 {
     public static EntityManager Instance;
 
-    private Dictionary<int, Entity> entityMap = new Dictionary<int, Entity>();
+    [SerializeField] Dictionary<int, Entity> entityMap = new Dictionary<int, Entity>();
 
     private void Awake()
     {

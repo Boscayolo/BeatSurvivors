@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using Pathfinding;
+using System.Collections;
 
 public class Entity : MonoBehaviour
 {
@@ -19,13 +20,20 @@ public class Entity : MonoBehaviour
     private void Awake()
     {
         EntityId = GetInstanceID();
-        EntityManager.Instance.RegisterEntity(this);
+
+        StartCoroutine(RegisterEntity());
 
         if (type == EntityType.PLAYER)
         {
             // Il player registra l'evento per assegnare il proprio transform ai nemici
             OnEnemyActivation += RegisterToEnemies;
         }
+    }
+
+    IEnumerator RegisterEntity()
+    {
+        yield return new WaitForEndOfFrame();
+        EntityManager.Instance.RegisterEntity(this);
     }
 
     private void OnEnable()
@@ -35,6 +43,8 @@ public class Entity : MonoBehaviour
             // Notifica al sistema che un nuovo nemico è stato attivato
             OnEnemyActivation?.Invoke(destinationSetter);
         }
+
+        StartCoroutine(RegisterEntity());
     }
 
     private void OnDisable()
@@ -54,12 +64,9 @@ public class Entity : MonoBehaviour
 
     private void RegisterToEnemies(AIDestinationSetter targetSetter)
     {
-        if (type == EntityType.PLAYER)
-        {
-            // Assegna il Transform del player come target per i nemici
-            targetSetter.target = this.transform;
-            Debug.Log($"Player registered as target for {targetSetter.gameObject.name}");
-        }
+        // Assegna il Transform del player come target per i nemici
+        targetSetter.target = this.transform;
+        Debug.Log($"Player registered as target for {targetSetter.gameObject.name}");
     }
 
     private float damageCooldown = 1.0f;

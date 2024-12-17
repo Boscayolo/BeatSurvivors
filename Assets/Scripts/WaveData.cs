@@ -2,7 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 
-[CreateAssetMenu(fileName = "WaveData", menuName = "ScriptableObjects/WaveData", order = 1)]
+[CreateAssetMenu(fileName = "WaveData", menuName = "Planeto/WaveData", order = 1)]
 public class WaveData : ScriptableObject
 {
     public List<Wave> waves = new List<Wave>();

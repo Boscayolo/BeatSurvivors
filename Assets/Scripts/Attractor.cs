@@ -3,8 +3,13 @@ using System.Collections;
 
 public class Attractor : MonoBehaviour
 {
-
+    public static Attractor instance;
     public float gravity = -10;
+
+    private void Awake()
+    {
+        instance = this;
+    }
 
     public void Attract(Transform body)
     {

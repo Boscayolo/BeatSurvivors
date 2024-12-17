@@ -525,6 +525,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 367be607b1fc5524a952f39d84892f22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: entityMap
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib],[Entity,
+        Assembly-CSharp]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.GenericEqualityComparer`1[[System.Int32,
+        mscorlib]], mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
 --- !u!4 &896840174
 Transform:
   m_ObjectHideFlags: 0
@@ -863,6 +892,37 @@ PrefabInstance:
     - target: {fileID: 2365785879714875065, guid: a213a6858c8c74742a470bc2c922e9cc,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5391337704758208455, guid: a213a6858c8c74742a470bc2c922e9cc,
+        type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 5391337704758208455, guid: a213a6858c8c74742a470bc2c922e9cc,
+        type: 3}
+    - target: {fileID: 8303558624858248643, guid: a213a6858c8c74742a470bc2c922e9cc,
+        type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8303558624858248643, guid: a213a6858c8c74742a470bc2c922e9cc,
+        type: 3}
+      propertyPath: m_ImplicitCom
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8303558624858248643, guid: a213a6858c8c74742a470bc2c922e9cc,
+        type: 3}
+      propertyPath: m_Interpolate
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8303558624858248643, guid: a213a6858c8c74742a470bc2c922e9cc,
+        type: 3}
+      propertyPath: m_IsKinematic
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8303558624858248643, guid: a213a6858c8c74742a470bc2c922e9cc,
+        type: 3}
+      propertyPath: m_ImplicitTensor
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
