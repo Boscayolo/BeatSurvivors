@@ -120,9 +120,17 @@ public class PlayerShooter : SerializedMonoBehaviour
         }
     }
 
-    void AddAttackUpgrade(UpgradeData upgradeData)
+    public void AddAttackUpgrade(UpgradeData upgradeData)
     {
+        AttackData attackToModify = upgradeData.originalAttack;
+        Attack modifyingAttack = attackDictionary[attackToModify];
 
+        modifyingAttack.cooldown += modifyingAttack.cooldown * (upgradeData.cooldownModification * .01f);
+        modifyingAttack.damage += modifyingAttack.damage * (upgradeData.damageModification * .01f);
+        modifyingAttack.projectileNumber += upgradeData.projectilesToAdd;
+        modifyingAttack.projectileAngle += upgradeData.angleModification;
+        modifyingAttack.speed += modifyingAttack.speed * (upgradeData.speedIncrease * .01f);
+        modifyingAttack.size += modifyingAttack.size * (upgradeData.sizeIncrease * .01f);
     }
 
 

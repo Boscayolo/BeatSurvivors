@@ -387,7 +387,7 @@ MonoBehaviour:
   showSearchTree: 0
   unwalkableNodeDebugSize: 0.3
   logPathResults: 0
-  maxNearestNodeDistance: 100
+  maxNearestNodeDistance: 30
   scanOnStartup: 1
   fullGetNearestSearch: 1
   prioritizeGraphs: 0
@@ -433,16 +433,16 @@ MonoBehaviour:
   - 29
   - 30
   - 31
-  heuristic: 2
+  heuristic: 0
   heuristicScale: 1
-  threadCount: -2
+  threadCount: 2
   maxFrameTime: 10
   batchGraphUpdates: 0
   graphUpdateBatchingInterval: 0.2
   navmeshUpdates:
     updateInterval: 0
   euclideanEmbedding:
-    mode: 2
+    mode: 1
     seed: 0
     pivotPointRoot: {fileID: 0}
     spreadOutCount: 15
@@ -482,7 +482,7 @@ MonoBehaviour:
   symmetryBreakingBias: 0.1
   movementPlane: 2
   useNavmeshAsObstacle: 1
-  drawQuadtree: 0
+  drawQuadtree: 1
 --- !u!1 &896840171
 GameObject:
   m_ObjectHideFlags: 0

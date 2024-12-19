@@ -32,7 +32,7 @@ public class Entity : MonoBehaviour
 
     IEnumerator RegisterEntity()
     {
-        yield return new WaitForEndOfFrame();
+        yield return null;
         EntityManager.Instance.RegisterEntity(this);
     }
 
