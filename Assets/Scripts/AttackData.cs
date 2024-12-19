@@ -4,8 +4,14 @@ using Sirenix.OdinInspector;
 [CreateAssetMenu(fileName = "AttackData", menuName = "Planeto/Attack Data")]
 public class AttackData : SerializedScriptableObject
 {
-    public enum AttackType { PROJECTILE, AURA, DROP, SPAWN };
+    public Attack attack;
+}
 
+[System.Serializable]
+public class Attack
+{
+    public enum AttackType { PROJECTILE, AURA, DROP, SPAWN };
+    public string attackName;
     [Header("Attack Properties")]
     public AttackType attackType;
     public float cooldown;            // Cooldown tra un'istanza e l'altra
@@ -13,8 +19,10 @@ public class AttackData : SerializedScriptableObject
     public GameObject prefab;
     public int initialPool = 10;
 
+    public float size = 1f;
+
     [Header("Projectile Settings")]
-    [ShowIf("@attackType == AttackType.PROJECTILE")]public int projectileNumber;      // Numero di proiettili sparati
+    [ShowIf("@attackType == AttackType.PROJECTILE")] public int projectileNumber;      // Numero di proiettili sparati
     [ShowIf("@attackType == AttackType.PROJECTILE")] public float projectileAngle;     // Angolo di distribuzione
     [ShowIf("@attackType == AttackType.PROJECTILE")] public bool shootBackwards;       // Spara al contrario
     [ShowIf("@attackType == AttackType.PROJECTILE")] public float speed;               // Velocità dei proiettili

@@ -6,32 +6,41 @@ using Sirenix.OdinInspector;
 public class PlayerShooter : SerializedMonoBehaviour
 {
     [Header("Attack Configuration")]
-    [SerializeField] private List<AttackData> attackDataList;
+    [SerializeField] private List<AttackData> startingAttacks;
+    private List<Attack> registeredAttacks = new List<Attack>();
+    private Dictionary<AttackData, Attack> attackDictionary = new Dictionary<AttackData, Attack>();
 
     [Header("Pooling System")]
     [SerializeField]private Dictionary<GameObject, Queue<GameObject>> projectilePool = new Dictionary<GameObject, Queue<GameObject>>();
 
-    private Dictionary<AttackData, Coroutine> activeCoroutines = new Dictionary<AttackData, Coroutine>();
+    private Dictionary<Attack, Coroutine> activeCoroutines = new Dictionary<Attack, Coroutine>();
 
     private void Start()
     {
-        // Avvia le coroutines per ogni abilità
-        foreach (var attackData in attackDataList)
+        for (int i = 0; i < startingAttacks.Count; i++)
         {
-            if (!activeCoroutines.ContainsKey(attackData))
+            Attack attackInList = startingAttacks[i].attack;
+            registeredAttacks.Add(attackInList);
+            attackDictionary.TryAdd(startingAttacks[i], attackInList);
+        }
+
+        // Avvia le coroutines per ogni abilità
+        foreach (var attack in registeredAttacks)
+        {
+            if (!activeCoroutines.ContainsKey(attack))
             {
-                Coroutine coroutine = StartCoroutine(HandleAttackCooldown(attackData));
-                activeCoroutines.Add(attackData, coroutine);
+                Coroutine coroutine = StartCoroutine(HandleAttackCooldown(attack));
+                activeCoroutines.Add(attack, coroutine);
             }
         }
 
-        foreach(AttackData attackData in attackDataList) 
+        foreach(AttackData attackData in startingAttacks) 
         {
             AddAttack(attackData);
         }
     }
 
-    private IEnumerator HandleAttackCooldown(AttackData attackData)
+    private IEnumerator HandleAttackCooldown(Attack attackData)
     {
         while (true)
         {
@@ -39,38 +48,38 @@ public class PlayerShooter : SerializedMonoBehaviour
 
             switch (attackData.attackType)
             {
-                case AttackData.AttackType.PROJECTILE:
+                case Attack.AttackType.PROJECTILE:
                     ShootProjectiles(attackData);
                     break;
-                case AttackData.AttackType.AURA:
+                case Attack.AttackType.AURA:
                     TriggerAuraDamage(attackData);
                     break;
-                case AttackData.AttackType.DROP:
+                case Attack.AttackType.DROP:
                     SpawnDrop(attackData);
                     break;
-                case AttackData.AttackType.SPAWN:
+                case Attack.AttackType.SPAWN:
                     SpawnObjectAroundPlayer(attackData);
                     break;
             }
         }
     }
 
-    private void ShootProjectiles(AttackData attackData)
+    private void ShootProjectiles(Attack attack)
     {
-        float angleStep = attackData.projectileAngle / attackData.projectileNumber;
-        float startAngle = attackData.projectileAngle / -2f;
+        float angleStep = attack.projectileAngle / attack.projectileNumber;
+        float startAngle = attack.projectileAngle / -2f;
 
         // Calcola il vettore radiale dal centro della sfera alla posizione del giocatore
         Vector3 toCenter = (transform.position - Attractor.instance.transform.position).normalized;
 
-        // Calcola la direzione tangente locale iniziale
-        Vector3 forwardDirection = Vector3.Cross(toCenter, transform.right).normalized;
+        // Calcola la direzione tangente locale frontale
+        Vector3 forwardDirection = Vector3.Cross(toCenter, Vector3.Cross(transform.forward, toCenter)).normalized;
 
         // Se shootBackwards è true, inverti la direzione
-        if (attackData.shootBackwards)
+        if (attack.shootBackwards)
             forwardDirection = -forwardDirection;
 
-        for (int i = 0; i < attackData.projectileNumber; i++)
+        for (int i = 0; i < attack.projectileNumber; i++)
         {
             // Calcola l'angolo per ogni proiettile
             float angle = startAngle + (angleStep * i);
@@ -80,37 +89,46 @@ public class PlayerShooter : SerializedMonoBehaviour
             Vector3 projectileDirection = rotation * forwardDirection;
 
             // Ottieni il proiettile dal pool
-            GameObject projectile = GetProjectileFromPool(attackData.prefab);
+            GameObject projectile = GetProjectileFromPool(attack.prefab);
             projectile.transform.position = transform.position;
             projectile.transform.rotation = Quaternion.LookRotation(projectileDirection);
 
             // Inizializza il movimento del proiettile
             projectile.GetComponent<Projectile>().InitializeProjectile(
-                attackData.prefab,
+                attack.prefab,
                 projectileDirection,
-                attackData.damage,
-                attackData.speed,
-                attackData.lifeTime
+                attack.damage,
+                attack.speed,
+                attack.lifeTime
             );
         }
     }
 
     void AddAttack(AttackData attackData)
     {
-        projectilePool.TryAdd(attackData.prefab, new Queue<GameObject>());
+        Attack nAttack = attackData.attack;
+        registeredAttacks.Add(nAttack);
+        attackDictionary.TryAdd(attackData, nAttack);
 
-        for (int i = 0; i < attackData.initialPool * attackData.projectileNumber; i++)
+        projectilePool.TryAdd(nAttack.prefab, new Queue<GameObject>());
+
+        for (int i = 0; i < nAttack.initialPool * nAttack.projectileNumber; i++)
         {
-            GameObject instantiatedProj = Instantiate(attackData.prefab); // Usa il prefab corretto
-            projectilePool[attackData.prefab].Enqueue(instantiatedProj);
+            GameObject instantiatedProj = Instantiate(nAttack.prefab); // Usa il prefab corretto
+            projectilePool[nAttack.prefab].Enqueue(instantiatedProj);
             instantiatedProj.SetActive(false);
         }
     }
 
-
-    private void TriggerAuraDamage(AttackData attackData)
+    void AddAttackUpgrade(UpgradeData upgradeData)
     {
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, attackData.auraRadius);
+
+    }
+
+
+    private void TriggerAuraDamage(Attack attack)
+    {
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, attack.auraRadius);
         foreach (var hitCollider in hitColliders)
         {
             var entity = hitCollider.GetComponent<Entity>();
@@ -118,31 +136,31 @@ public class PlayerShooter : SerializedMonoBehaviour
             {
                 DamageManager.Instance.RegisterDamage(new DamageEvent(
                     targetEntityId: entity.EntityId,
-                    damageAmount: attackData.damage,
+                    damageAmount: attack.damage,
                     sourceType: EntityType.PLAYER
                 ));
             }
         }
     }
 
-    private void SpawnDrop(AttackData attackData)
+    private void SpawnDrop(Attack attack)
     {
         // Ottieni il prefab specificato nell'AttackData
-        GameObject drop = GetProjectileFromPool(attackData.prefab);
+        GameObject drop = GetProjectileFromPool(attack.prefab);
         drop.transform.position = transform.position; // Spawn alla posizione del giocatore
 
         // Configura il ciclo di vita del drop (se definito)
-        if (attackData.hasLifeTime)
+        if (attack.hasLifeTime)
         {
-            drop.GetComponent<Projectile>().InitializeProjectile(attackData.prefab, Vector3.zero, attackData.damage, 0, attackData.lifeTimeDrop);
+            drop.GetComponent<Projectile>().InitializeProjectile(attack.prefab, Vector3.zero, attack.damage, 0, attack.lifeTimeDrop);
         }
     }
 
     float orbitRadius = -1;
 
-    private void SpawnObjectAroundPlayer(AttackData attackData)
+    private void SpawnObjectAroundPlayer(Attack attack)
     {
-        int numObjects = attackData.projectileNumber; // Numero di oggetti da spawnare
+        int numObjects = attack.projectileNumber; // Numero di oggetti da spawnare
 
         if(orbitRadius == -1) orbitRadius = Vector3.Distance(transform.position, Attractor.instance.transform.position); // Distanza fissa (configurabile)
         float angleStep = 360f / numObjects; // Distribuzione uniforme a 360 gradi
@@ -152,10 +170,10 @@ public class PlayerShooter : SerializedMonoBehaviour
             float angle = i * angleStep;
             Vector3 spawnPosition = GetOrbitPosition(transform.position, angle, orbitRadius);
 
-            GameObject orbitObject = GetProjectileFromPool(attackData.prefab);
+            GameObject orbitObject = GetProjectileFromPool(attack.prefab);
             orbitObject.transform.position = spawnPosition;
             orbitObject.transform.parent = transform; // Imposta il giocatore come parent
-            orbitObject.GetComponent<Projectile>()?.InitializeOrbiting(attackData.prefab, orbitRadius, angle, attackData.speed);
+            orbitObject.GetComponent<Projectile>()?.InitializeOrbiting(attack.prefab, orbitRadius, angle, attack.speed);
         }
     }
 

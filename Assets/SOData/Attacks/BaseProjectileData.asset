@@ -21,17 +21,21 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  attackType: 0
-  cooldown: 3
-  damage: 50
-  prefab: {fileID: 1935988263197797694, guid: 5e9669398c5f8d841b377109f1cbfa8f, type: 3}
-  initialPool: 10
-  projectileNumber: 9
-  projectileAngle: 360
-  shootBackwards: 0
-  speed: 13
-  hasLifeTime: 0
-  lifeTime: 2
-  auraRadius: 0
-  hasActivationEffect: 0
-  lifeTimeDrop: 0
+  attack:
+    attackName: 
+    attackType: 0
+    cooldown: 2
+    damage: 50
+    prefab: {fileID: 1935988263197797694, guid: 5e9669398c5f8d841b377109f1cbfa8f,
+      type: 3}
+    initialPool: 10
+    size: 1
+    projectileNumber: 4
+    projectileAngle: 360
+    shootBackwards: 0
+    speed: 13
+    hasLifeTime: 0
+    lifeTime: 3
+    auraRadius: 0
+    hasActivationEffect: 0
+    lifeTimeDrop: 0
